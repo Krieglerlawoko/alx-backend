@@ -3,6 +3,7 @@
 0-validate_utf8.py
 """
 
+
 def validUTF8(data):
     """
     Determine if a given data
