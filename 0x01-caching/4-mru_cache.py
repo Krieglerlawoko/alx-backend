@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-""" MRUCache module """
+"""MRUCache module"""
 
 from base_caching import BaseCaching
 
 
 class MRUCache(BaseCaching):
-    """ MRUCache class that inherits from BaseCaching """
+    """MRUCache class that inherits from BaseCaching"""
 
     def __init__(self):
-        """ Initialize the class """
+        """Initialize the class"""
         super().__init__()
         self.usage_order = []
 
     def put(self, key, item):
-        """ Add an item in the cache """
+        """Add an item in the cache"""
         if key is not None and item is not None:
             if key in self.cache_data:
                 self.usage_order.remove(key)
@@ -25,7 +25,7 @@ class MRUCache(BaseCaching):
                 print(f"DISCARD: {mru_key}")
 
     def get(self, key):
-        """ Get an item by key """
+        """Get an item by key"""
         if key in self.cache_data:
             self.usage_order.remove(key)
             self.usage_order.append(key)
