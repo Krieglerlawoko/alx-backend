@@ -1,40 +1,25 @@
 #!/usr/bin/env python3
 """
-Parametrize templates
+Flask application to render a simple 'Hello world' page with internationalization.
 """
+
 from flask import Flask, render_template
-from flask_babel import Babel, _
-
-
-class Config:
-    """
-    Config class for Flask app
-    """
-    LANGUAGES = ["en", "fr"]
-    BABEL_DEFAULT_LOCALE = "en"
-    BABEL_DEFAULT_TIMEZONE = "UTC"
-
+from flask_babel import Babel, gettext as _
+from typing import Any
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config['BABEL_DEFAULT_LOCALE'] = 'en'
 babel = Babel(app)
 
-
-@babel.localeselector
-def get_locale():
-    """
-    Get locale from request
-    """
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
-
-
 @app.route('/')
-def index():
+def index() -> Any:
     """
-    Index route
+    Render the index page with translations.
+
+    Returns:
+        The rendered template for the index page.
     """
     return render_template('3-index.html')
 
-
-if __name__ == "__main__":
-    app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
