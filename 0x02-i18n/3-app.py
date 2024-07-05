@@ -1,25 +1,55 @@
 #!/usr/bin/env python3
 """
-Flask application to render a simple 'Hello world' page with internationalization.
+Task 2: Get locale from request
 """
 
-from flask import Flask, render_template
-from flask_babel import Babel, gettext as _
-from typing import Any
+from flask import Flask, render_template, request
+from flask_babel import Babel
+
+
+class Config:
+    """
+    Configuration class for Flask application.
+    """
+    DEBUG = True
+    LANGUAGES = ["en", "fr"]
+    BABEL_DEFAULT_LOCALE = "en"
+    BABEL_DEFAULT_TIMEZONE = "UTC"
+
 
 app = Flask(__name__)
-app.config['BABEL_DEFAULT_LOCALE'] = 'en'
+app.config.from_object(Config)
+app.url_map.strict_slashes = False
 babel = Babel(app)
 
-@app.route('/')
-def index() -> Any:
+
+@babel.localeselector
+def get_locale() -> str:
     """
-    Render the index page with translations.
+    Retrieves the locale for a web page.
 
     Returns:
-        The rendered template for the index page.
+        str: Best match for supported languages.
     """
-    return render_template('3-index.html')
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+@app.route('/')
+def index() -> str:
+    """
+    Default route for the homepage.
+
+    Returns:
+        str: Rendered HTML for the homepage.
+    """
+    return render_template("3-index.html")
+
+
+# Uncomment the following line and comment the @babel.localeselector
+# if you encounter the error:
+# AttributeError: 'Babel' object has no attribute 'localeselector'
+# babel.init_app(app, locale_selector=get_locale)
+
+
+if __name__ == "__main__":
+    app.run()
